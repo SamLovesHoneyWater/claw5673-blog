@@ -1,6 +1,6 @@
 baseURL = 'https://samloveshoneywater.github.io/claw5673-blog/'
 languageCode = 'en-us'
-title = 'Build Log'
+title = "Claw5673's Blog"
 theme = 'paper'
 
 [params]
