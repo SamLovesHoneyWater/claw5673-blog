@@ -1,0 +1,17 @@
+baseURL = 'https://samloveshoneywater.github.io/blog/'
+languageCode = 'en-us'
+title = 'Build Log'
+theme = 'paper'
+
+[params]
+  color = 'linen'
+  avatar = ''
+  name = 'SamLovesHoneyWater'
+  bio = 'Builder. AI tinkerer. Shipping things in public.'
+
+[menu]
+  [[menu.main]]
+    identifier = 'about'
+    name = 'About'
+    url = '/about/'
+    weight = 10
