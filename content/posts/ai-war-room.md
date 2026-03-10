@@ -1,7 +1,7 @@
 ---
 title: "Building an AI War Room: Real-Time Geopolitical Monitoring with OpenClaw"
 date: 2026-03-10
-draft: true
+draft: false
 ---
 
 What happens when an AI assistant gets real-time access to news feeds, market data, and a messaging channel — and is told to watch a war unfold?
