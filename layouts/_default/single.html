@@ -1,0 +1,164 @@
+{{- define "main" -}}
+
+<article>
+  <header class="mb-14">
+    <h1 class="my-0! pb-2.5">{{- .Title -}}</h1>
+
+    {{- if ne .Type "page" -}}
+    <div class="text-xs antialiased opacity-60">
+      {{- if .Date -}}
+      <time>{{- .Date | time.Format ":date_medium" -}}</time>
+      {{- end -}}<!---->
+      {{- $single_author := or .Params.author site.Params.author -}}
+      <!---->
+      {{- if $single_author -}}
+      <span class="mx-1">&middot;</span>
+      <span>{{- $single_author -}}</span>
+      {{- end -}}
+    </div>
+    {{- end -}}
+  </header>
+
+  <section>{{- .Content -}}</section>
+
+  <!-- Post Tags -->
+  {{- if .Params.tags -}}
+  <footer class="mt-12 flex flex-wrap">
+    {{- range .Params.tags -}} {{- $href := print (absURL "tags/") (urlize .)
+    -}}
+    <a
+      class="mb-1.5 rounded-lg bg-black/[3%] px-5 py-1 no-underline hover:bg-black/[6%] ltr:mr-1.5 rtl:ml-1.5 dark:bg-white/[8%] dark:hover:bg-white/[12%]"
+      href="{{- $href -}}"
+      >{{- . -}}</a
+    >
+    {{- end -}}
+  </footer>
+  {{- end -}}
+
+  <!-- Post Nav -->
+  {{- if not site.Params.disablePostNavigation -}}<!---->
+  {{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections -}}<!---->
+  {{- if and (gt (len $pages) 1) (in $pages . ) -}}
+  <nav
+    class="mt-24 flex overflow-hidden rounded-xl bg-black/[3%] text-lg leading-[1.2]! *:flex *:w-1/2 *:items-center *:p-5 *:font-medium *:no-underline dark:bg-white/[8%] [&>*:hover]:bg-black/[2%] dark:[&>*:hover]:bg-white/[3%]"
+  >
+    {{- with $pages.Next . -}}
+    <a class="ltr:pr-3 rtl:pl-3" href="{{- .Permalink -}}"
+      ><span class="ltr:mr-1.5 rtl:ml-1.5">←</span><span>{{- .Name -}}</span></a
+    >
+    {{- end -}}<!---->
+    {{- with $pages.Prev . -}}
+    <a
+      class="justify-end pl-3 ltr:ml-auto rtl:mr-auto"
+      href="{{- .Permalink -}}"
+      ><span>{{- .Name -}}</span><span class="ltr:ml-1.5 rtl:mr-1.5">→</span></a
+    >
+    {{- end -}}
+  </nav>
+  {{- end -}}<!---->
+  {{- end -}}
+
+  <!-- Disqus -->
+  {{- if and site.Config.Services.Disqus.Shortname (not (eq .Params.comments
+  false)) -}}
+  <div class="mt-24! text-black dark:text-white" id="disqus_thread"></div>
+  <script>
+    const disqusShortname = '{{- site.Config.Services.Disqus.Shortname -}}';
+    const script = document.createElement('script');
+    script.src = 'https://' + disqusShortname + '.disqus.com/embed.js';
+    script.setAttribute('data-timestamp', +new Date());
+    document.head.appendChild(script);
+  </script>
+  {{- end -}}
+
+  <!-- GraphComment -->
+  {{- if and site.Params.graphCommentId (not (eq .Params.comments false)) -}}
+  <div class="mt-24! text-black dark:text-white" id="graphcomment"></div>
+  <script type="text/javascript">
+    var __semio__params = {
+      graphcommentId: '{{- site.Params.graphCommentId  -}}',
+      behaviour: {
+        //  uid: "...",
+      },
+      // configure your variables here
+    };
+
+    function __semio__onload() {
+      __semio__gc_graphlogin(__semio__params);
+    }
+
+    (function () {
+      var gc = document.createElement('script');
+      gc.type = 'text/javascript';
+      gc.async = true;
+      gc.onload = __semio__onload;
+      gc.defer = true;
+      gc.src =
+        'https://integration.graphcomment.com/gc_graphlogin.js?' + Date.now();
+      (
+        document.getElementsByTagName('head')[0] ||
+        document.getElementsByTagName('body')[0]
+      ).appendChild(gc);
+    })();
+  </script>
+  {{- end -}}
+
+  <!-- mermaid -->
+  {{- partial "mermaid.html" . -}}
+
+  <!-- giscus comment — with dynamic dark/light theme sync -->
+  {{- if and site.Params.giscus.repo (not (eq .Params.comments false)) -}}
+  <div class="giscus mt-24! text-black dark:text-white"></div>
+  <script>
+    // Determine initial giscus theme from current page state
+    function getGiscusTheme() {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    }
+
+    // Load giscus with correct initial theme
+    function loadGiscus() {
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.setAttribute('data-repo', '{{- site.Params.giscus.repo -}}');
+      script.setAttribute('data-repo-id', '{{- site.Params.giscus.repoId -}}');
+      script.setAttribute('data-category', '{{- site.Params.giscus.category -}}');
+      script.setAttribute('data-category-id', '{{- site.Params.giscus.categoryId -}}');
+      script.setAttribute('data-mapping', '{{- site.Params.giscus.mapping | default (print `pathname`) -}}');
+      script.setAttribute('data-strict', '{{- site.Params.giscus.strict | default (print `1`) -}}');
+      script.setAttribute('data-reactions-enabled', '{{- site.Params.giscus.reactionsEnabled | default (print `0`) -}}');
+      script.setAttribute('data-emit-metadata', '{{- site.Params.giscus.emitMetadata | default (print `0`) -}}');
+      script.setAttribute('data-input-position', '{{- site.Params.giscus.inputPosition | default (print `top`) -}}');
+      script.setAttribute('data-theme', getGiscusTheme());
+      script.setAttribute('data-lang', '{{- site.Params.giscus.lang | default (print `en`) -}}');
+      script.setAttribute('data-loading', '{{- site.Params.giscus.loading | default (print `lazy`) -}}');
+      script.setAttribute('crossorigin', 'anonymous');
+      script.async = true;
+      document.querySelector('.giscus').appendChild(script);
+    }
+
+    // Send theme change to giscus iframe via postMessage
+    function setGiscusTheme(theme) {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      if (iframe) {
+        iframe.contentWindow.postMessage(
+          { giscus: { setConfig: { theme: theme } } },
+          'https://giscus.app'
+        );
+      }
+    }
+
+    // Watch for dark mode toggles (MutationObserver on <html> class)
+    const observer = new MutationObserver(() => {
+      setGiscusTheme(getGiscusTheme());
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    loadGiscus();
+  </script>
+  {{- end -}}
+</article>
+
+{{- end -}}
