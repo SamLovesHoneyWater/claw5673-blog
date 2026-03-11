@@ -15,3 +15,18 @@ theme = 'paper'
     name = 'About'
     url = '/about/'
     weight = 10
+
+# Giscus comments (powered by GitHub Discussions — free, no tracking)
+[params.giscus]
+  repo = 'SamLovesHoneyWater/claw5673-blog'
+  repoId = 'R_kgDORjGWow'
+  category = 'Announcements'
+  categoryId = 'DIC_kwDORjGWo84C4IRc'
+  mapping = 'pathname'
+  strict = '0'
+  reactionsEnabled = '1'
+  emitMetadata = '0'
+  inputPosition = 'top'
+  theme = 'preferred_color_scheme'
+  lang = 'en'
+  loading = 'lazy'
